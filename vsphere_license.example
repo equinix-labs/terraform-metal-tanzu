@@ -1,0 +1,11 @@
+variable "vsphere_license" {
+    description = "If you have a vSphere Enterprise 7 Plus license key, please set this value."
+}
+
+module "vsphere_license" {
+    source           = "./modules/vsphere-license"
+    vsphere_server   = "vcva.packet.local"
+    vsphere_user     = "Administrator@vsphere.local"
+    vsphere_password = random_string.sso_password.result
+    vsphere_license  = var.vsphere_license
+}
