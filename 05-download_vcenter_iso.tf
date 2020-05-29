@@ -27,15 +27,6 @@ resource "null_resource" "download_vcenter_iso" {
   }
 
   provisioner "remote-exec" {
-    inline = ["mkdir -p /root/anthos/gcp_keys"]
-  }
-
-  provisioner "file" {
-    source      = "anthos/gcp_keys/"
-    destination = "/root/anthos/gcp_keys"
-  }
-
-  provisioner "remote-exec" {
     inline = [
       "cd /root",
       "chmod +x /root/download_vcenter.sh",
