@@ -1,0 +1,20 @@
+module "tanzu" {
+  source          = "./modules/vmware-tanzu"
+  host            = "vcva.packet.local"
+  user            = "Administrator@vsphere.local"
+  password        = random_string.sso_password.result
+  nsuser          = var.nsuser
+  nsdomain        = var.nsdomain
+  namespace       = var.namespace
+  storagepolicy   = var.storagepolicy
+  storagelimit    = var.storagelimit
+  clustername     = var.cluster_name
+  mastervmnetwork = var.cp_vm_network
+  startingip      = var.starting_ip
+  mastersm        = var.cp_subnet_mask
+  gatewayip       = var.cp_gateway_ip
+  dnsserver       = var.dns_server
+  ntpserver       = var.ntp_server
+  egressaddress   = var.egress_starting_ip
+  ingressaddress  = var.ingress_starting_ip
+}
