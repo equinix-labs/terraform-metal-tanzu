@@ -1,7 +1,8 @@
 variable "vsphere_user" {}
 variable "vsphere_password" {}
 variable "vsphere_server" {}
-variable "vsphere_license" {}
+variable "license_key" {}
+variable "product_description" {}
 
 provider "vsphere" {
   user           = var.vsphere_user
@@ -11,10 +12,11 @@ provider "vsphere" {
 }
 
 resource "vsphere_license" "licenseKey" {
-  license_key = var.vsphere_license
+  license_key = var.license_key
 
-  labels {
+  labels = {
     Provider = "Packet"
+    Product  = var.product_description
   }
 
 }
