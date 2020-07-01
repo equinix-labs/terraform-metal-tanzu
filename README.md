@@ -15,9 +15,10 @@ To use these Terraform files, you need to have the following Prerequisites:
       * OR
     * E-Mail support@packet.com
   * Your message across one of these mediums should be:
-    * I am working with the Google Anthos Terrafom deployment (github.com/packet-labs/google-anthos). I need an entitlement increase to allow the creation of five or more vLans. Can you please assist?
+    * I am working with the Tanzu Terrafom deployment (github.com/packet-labs/packet-tanzu-tf). I need an entitlement increase to allow the creation of five or more vLans. Can you please assist?
 * [VMware vCenter Server 6.7U3](https://my.vmware.com/group/vmware/details?downloadGroup=VC67U3B&productId=742&rPId=40665) - VMware vCenter Server Appliance ISO obtained from VMware
 * [VMware vSAN Management SDK 6.7U3](https://my.vmware.com/group/vmware/details?downloadGroup=VSAN-MGMT-SDK67U3&productId=734) - Virtual SAN Management SDK for Python, also from VMware
+* [VMWare NSX-T Virtual Appliance](https://docs.vmware.com/en/VMware-NSX-T-Data-Center/3.0/installation/GUID-A65FE3DD-C4F1-47EC-B952-DEDF1A3DD0CF.html) must be installed, and you must (after installation of vSphere has completed) a license for NSX-T Datacenter Advanced must be applied. All other license upgrades are handled via Terraform. 
  
 ## Associated Packet Costs
 The default variables make use of 4 [c2.medium.x86](https://www.packet.com/cloud/servers/c2-medium-epyc/) servers. These servers are $1 per hour list price (resulting in a total solution price of roughly $4 per hour).
@@ -36,13 +37,6 @@ chmod +x terraform
 sudo mv terraform /usr/local/bin/ 
 ``` 
  
-## Download this project
-To download this project, run the following command:
-
-```bash
-git clone https://github.com/packet-labs/google-anthos.git
-```
-
 ## Initialize Terraform 
 Terraform uses modules to deploy infrastructure. In order to initialize the modules your simply run: `terraform init`. This should download five modules into a hidden directory `.terraform` 
 
@@ -127,7 +121,6 @@ Apply complete! Resources: 50 added, 0 changed, 0 destroyed.
  
 Outputs: 
 
-KSA_Token_Location = The user cluster KSA Token (for logging in from GCP) is located at ./ksa_token.txt
 SSH_Key_Location = An SSH Key was created for this environment, it is saved at ~/.ssh/project_2-20200331215342-key
 VPN_Endpoint = 139.178.85.91
 VPN_PSK = @1!64v7$PLuIIir9TPIJ
@@ -145,16 +138,35 @@ which should have been automatically generated as a side-effect of the "terrafor
 
 ## vSphere License Management
 
-The `vsphere-license` module can be used to apply your [vSphere 7 Enterprise Plus license](https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-kubernetes/GUID-9A190942-BDB1-4A19-BA09-728820A716F2.html):
+**Note:** you will need to be connected to the VPN configured with vSphere above in order to manage the cluster license and to access vCenter and apply the license module. Please connect to the VPN before applying this module
+
+The `vsphere-license` module can be used to apply your [vSphere 7 Enterprise Plus license](https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-kubernetes/GUID-9A190942-BDB1-4A19-BA09-728820A716F2.html) and other licenses required for this project's features:
 
 ```bash
 cp vsphere_license.example license.tf
 terraform apply -target=module.vpshere_license
+terraform apply -target=module.vsphere_addon_license
+terraform apply -target=module.vsphere_enterprise_license
+```
+and you will be prompted for your license keys, or define the following in your `terraform.tfvars`:
+
+```
+vsphere_addon_license      = "XXXX-XXXX-XXXX-XXXX-XXXX" #Addon for Kubernetes
+vsphere_enterprise_license = "XXXX-XXXX-XXXX-XXXX-XXXX" #vSphere Enterprise 7
+vsphere_license            = "XXXX-XXXX-XXXX-XXXX-XXXX" #vSphere Standard
 ```
 
-**Note:** you will need to be connected to the VPN in order to manage the cluster license and to access vCenter. 
+At present, the VMWare NSX Terraform provider does not have the capability to apply licenses for the NSX-T product, which will also require a Datacenter Advanced license in order to use Tanzu, which can be added via the NSX UI, or [using the NSX API](https://www.vmware.com/support/nsxt/doc/nsxt_20_api.html#Methods.UpdateLicense).
 
-TODO: This module will also eventually include bootstrapping the supervisor namespace and instantiating the cluster via a script in `templates` script, pending a TF provider change.
+## Deploying Kubernetes
+
+Once the upgrades licenses are applied, you can, either, [create a supervisor namespace and cluster from the UI](https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-kubernetes/GUID-177C23C4-ED81-4ADD-89A2-61654C18201B.html) in vSphere, or use the bootstrapping module for a basic cluster:
+
+```bash
+cp tanzu_tf.example supervisor.tf
+terraform apply -target=module.tanzu
+```
+and complete the supervisor cluster spec configuration (i.e. ranges for ingress, egress, storage policy IDs, etc.)
 
 ## Size of the vSphere Cluster
 The code supports deploying a single ESXi server or a 3+ node vSAN cluster. Default settings are for 3 ESXi nodes with vSAN.
