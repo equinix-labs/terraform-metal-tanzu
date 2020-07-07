@@ -1,6 +1,6 @@
 [![Packet Website](https://img.shields.io/badge/Website%3A-Packet.com-blue)](http://packet.com) [![Slack Status](https://slack.packet.com/badge.svg)](https://slack.packet.com) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-# Automated VMWare vSphere Installation via Terraform for Packet
-These files will allow you to use [Terraform](http://terraform.io) to deploy [VMWare Tanzu](https://tanzu.io) on [Packet's Bare Metal Cloud offering](https://www.packet.com/cloud/). 
+# Automated VMware vSphere Installation via Terraform for Packet
+These files will allow you to use [Terraform](http://terraform.io) to deploy [VMware Tanzu](https://tanzu.io) on [Packet's Bare Metal Cloud offering](https://www.packet.com/cloud/). 
 
 Terraform will create a Packet project complete with a linux machine for routing, a vSphere cluster installed on minimum 3 ESXi hosts with vSAN storage, and an Anthos GKE on-prem admin and user cluster registered to Google Cloud. You can use an existing Packet Project, check this [section](#use-an-existing-packet-project) for instructions.
 
@@ -18,7 +18,7 @@ To use these Terraform files, you need to have the following Prerequisites:
     * I am working with the Tanzu Terrafom deployment (github.com/packet-labs/packet-tanzu-tf). I need an entitlement increase to allow the creation of five or more vLans. Can you please assist?
 * [VMware vCenter Server 6.7U3](https://my.vmware.com/group/vmware/details?downloadGroup=VC67U3B&productId=742&rPId=40665) - VMware vCenter Server Appliance ISO obtained from VMware
 * [VMware vSAN Management SDK 6.7U3](https://my.vmware.com/group/vmware/details?downloadGroup=VSAN-MGMT-SDK67U3&productId=734) - Virtual SAN Management SDK for Python, also from VMware
-* [VMWare NSX-T Virtual Appliance](https://docs.vmware.com/en/VMware-NSX-T-Data-Center/3.0/installation/GUID-A65FE3DD-C4F1-47EC-B952-DEDF1A3DD0CF.html) must be installed, and you must (after installation of vSphere has completed) a license for NSX-T Datacenter Advanced must be applied. All other license upgrades are handled via Terraform. 
+* [VMware NSX-T Virtual Appliance](https://docs.vmware.com/en/VMware-NSX-T-Data-Center/3.0/installation/GUID-A65FE3DD-C4F1-47EC-B952-DEDF1A3DD0CF.html) must be installed, and you must (after installation of vSphere has completed) a license for NSX-T Datacenter Advanced must be applied. All other license upgrades are handled via Terraform. 
  
 ## Associated Packet Costs
 The default variables make use of 4 [c2.medium.x86](https://www.packet.com/cloud/servers/c2-medium-epyc/) servers. These servers are $1 per hour list price (resulting in a total solution price of roughly $4 per hour).
@@ -92,7 +92,7 @@ terraform apply -target=module.minio_credentials -auto-approve
 terraform apply -target=module.minio_host -auto-approve
 ```
 
-and the output will provide you with the S3 URL, access token, and secret key you can use for the above s3 variable, which you can use to add the above VMWare files. 
+and the output will provide you with the S3 URL, access token, and secret key you can use for the above s3 variable, which you can use to add the above VMware files. 
 
 ## Modify your variables 
 There are many variables which can be set to customize your install within `00-vars.tf`. The default variables to bring up a 3 node vSphere cluster and Linux router using Packet's [c2.medium.x86](https://www.packet.com/cloud/servers/c2-medium-epyc/). Change each default variable at your own risk. 
@@ -156,7 +156,7 @@ vsphere_enterprise_license = "XXXX-XXXX-XXXX-XXXX-XXXX" #vSphere Enterprise 7
 vsphere_license            = "XXXX-XXXX-XXXX-XXXX-XXXX" #vSphere Standard
 ```
 
-At present, the VMWare NSX Terraform provider does not have the capability to apply licenses for the NSX-T product, which will also require a Datacenter Advanced license in order to use Tanzu, which can be added via the NSX UI, or [using the NSX API](https://www.vmware.com/support/nsxt/doc/nsxt_20_api.html#Methods.UpdateLicense).
+At present, the VMware NSX Terraform provider does not have the capability to apply licenses for the NSX-T product, which will also require a Datacenter Advanced license in order to use Tanzu, which can be added via the NSX UI, or [using the NSX API](https://www.vmware.com/support/nsxt/doc/nsxt_20_api.html#Methods.UpdateLicense).
 
 ## Deploying Kubernetes
 
