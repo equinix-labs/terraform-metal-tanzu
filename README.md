@@ -1,8 +1,8 @@
 [![Packet Website](https://img.shields.io/badge/Website%3A-Packet.com-blue)](http://packet.com) [![Slack Status](https://slack.packet.com/badge.svg)](https://slack.packet.com) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-# Automated VMware vSphere Installation via Terraform for Packet
+# VMware Tanzu Installation on Packet with Terraform
 These files will allow you to use [Terraform](http://terraform.io) to deploy [VMware Tanzu](https://tanzu.io) on [Packet's Bare Metal Cloud offering](https://www.packet.com/cloud/). 
 
-Terraform will create a Packet project complete with a linux machine for routing, a vSphere cluster installed on minimum 3 ESXi hosts with vSAN storage, and an Anthos GKE on-prem admin and user cluster registered to Google Cloud. You can use an existing Packet Project, check this [section](#use-an-existing-packet-project) for instructions.
+Terraform will create a Packet project complete with a linux machine for routing, a vSphere cluster installed on minimum 3 ESXi hosts with vSAN storage, and a VMware Tanzu supervisor cluster. You can use an existing Packet Project, check this [section](#use-an-existing-packet-project) for instructions.
 
 Users are responsible for providing their own VMware vSphere iso, SDK, Packet account, and upgraded vSphere Enterprise Plus license as described in this readme.
 
