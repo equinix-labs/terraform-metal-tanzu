@@ -1,4 +1,4 @@
-data "template_file" "esx_host_networking" {
+data "template_file" "create_namespace" {
   template = file("${path.module}/templates/create_namespace.py")
   vars = {
     host          = var.vcenter_host
@@ -22,8 +22,8 @@ resource "null_resource" "namespace_config" {
   }
 
   provisioner "file" {
-    content     = data.template_file.esx_host_networking.rendered
-    destination = "/root/configure_supervisor_cluster.py"
+    content     = data.template_file.create_namespace.rendered
+    destination = "/root/create_namespace.py"
   }
 }
 
