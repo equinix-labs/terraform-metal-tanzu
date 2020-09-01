@@ -4,6 +4,14 @@ terraform {
   }
 }
 
+variable "minio_plan" {
+  default = "x1.small.x86"
+}
+
+variable "minio_project_id" {
+  default = "null"
+}
+
 variable "auth_token" {
 }
 
