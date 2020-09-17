@@ -1,5 +1,9 @@
-variable "plan_node" {}
+variable "plan" {
+  default = "x1.small.x86"
+}
+
 variable "project_id" {}
+
 variable "facility" {}
 variable "minio_access_key" {}
 variable "minio_secret_key" {}
@@ -7,7 +11,7 @@ variable "minio_secret_key" {}
 resource "packet_device" "minio_host" {
   hostname         = "minio"
   operating_system = "ubuntu_18_04"
-  plan             = var.plan_node
+  plan             = var.plan
   facilities       = [var.facility]
   user_data        = data.template_file.minio.rendered
   tags             = ["minio"]

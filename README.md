@@ -87,7 +87,20 @@ If you do not have a Minio or other S3 compatible object store available, for th
 ```bash
 cp minio_tf.example minio.tf
 ```
-and running:
+
+Deploying minio requires an extra parameter added to the `terraform.tfvars` file, which is a project ID. Minio won't be deployed to your Tanzu project, it is encouraged to keep this separate.
+
+```
+minio_project_id = "UUID"
+```
+
+By default, minio will be deployed on a `x1.small.x86` machine. If you wish to change this, you can also override it inside `terraform.tfvars`.
+
+```
+minio_plan = "t1.small"
+```
+
+You can now run a `terraform apply`, targetting only our Minio resources.
 
 ```bash
 terraform apply -target=module.minio_credentials -auto-approve
