@@ -1,4 +1,4 @@
-data "template_file" "esx_host_networking" {
+data "template_file" "configure_supervisor_cluster" {
   template = file("${path.module}/templates/configure_supervisor_cluster.py")
   vars = {
     host            = var.vcenter_host
@@ -26,7 +26,7 @@ resource "null_resource" "supervisor_cluster_config" {
   }
 
   provisioner "file" {
-    content     = data.template_file.esx_host_networking.rendered
+    content     = data.template_file.configure_supervisor_cluster.rendered
     destination = "/root/configure_supervisor_cluster.py"
   }
 }
