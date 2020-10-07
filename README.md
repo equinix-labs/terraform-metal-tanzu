@@ -1,31 +1,32 @@
-[![Packet Website](https://img.shields.io/badge/Website%3A-Packet.com-blue)](http://packet.com) [![Slack Status](https://slack.packet.com/badge.svg)](https://slack.packet.com) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) ![](https://img.shields.io/badge/Stability-Experimental-red.svg)
-# VMware Tanzu Installation on Packet with Terraform
-These files will allow you to use [Terraform](http://terraform.io) to deploy [VMware Tanzu](https://tanzu.io) on [Packet's Bare Metal Cloud offering](https://www.packet.com/cloud/). 
+[![Equinix Metal Website](https://img.shields.io/badge/Website%3A-Metal.Equinix.com-blue)](http://metal.equinix.com) [![Slack Status](https://slack.equinixmetal.com/badge.svg)](https://slack.equinixmetal.com/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) ![](https://img.shields.io/badge/Stability-Experimental-red.svg)
 
-Terraform will create a Packet project complete with a linux machine for routing, a vSphere cluster installed on minimum 3 ESXi hosts with vSAN storage, and a VMware Tanzu supervisor cluster. You can use an existing Packet Project, check this [section](#use-an-existing-packet-project) for instructions.
+# VMware Tanzu Installation on Equinix Metal with Terraform
+These files will allow you to use [Terraform](http://terraform.io) to deploy [VMware Tanzu](https://tanzu.io) on [Equinix Metal's Bare Metal Cloud offering](https://metal.equinix.com/product/). 
 
-Users are responsible for providing their own VMware vSphere iso, SDK, Packet account, and upgraded vSphere Enterprise Plus license as described in this readme.
+Terraform will create a Equinix Metal project complete with a linux machine for routing, a vSphere cluster installed on minimum 3 ESXi hosts with vSAN storage, and a VMware Tanzu supervisor cluster. You can use an existing Equinix Metal Project, check this [section](#use-an-existing-equinix-metal-project) for instructions.
+
+Users are responsible for providing their own VMware vSphere iso, SDK, Equinix Metal account, and upgraded vSphere Enterprise Plus license as described in this readme.
 
 This repository is [Experimental](https://github.com/packethost/standards/blob/master/experimental-statement.md) meaning that it's based on untested ideas or techniques and not yet established or finalized or involves a radically new and innovative style! This means that support is best effort (at best!) and we strongly encourage you to NOT use this in production.
 
 ## Prerequisites
 To use these Terraform files, you need to have the following Prerequisites:
-* A Packet org-id and [API key](https://www.packet.com/developers/api/)
-* **If you are new to Packet**
-  * You will need to request an "Entitlement Increase".  You will need to work with Packet Support via either:
-    * Use the ![Packet Website](https://img.shields.io/badge/Chat%20Now%20%28%3F%29-blue) at the bottom left of the Packet Web UI
+* A Equinix Metal org-id and [API key](https://metal.equinix.com/developers/api/)
+* **If you are new to Equinix Metal**
+  * You will need to request an "Entitlement Increase".  You will need to work with Equinix Metal Support via either:
+    * Use the ![Equinix Metal Website](https://img.shields.io/badge/Chat%20Now%20%28%3F%29-blue) at the bottom left of the Equinix Metal Web UI
       * OR
-    * E-Mail support@packet.com
+    * E-Mail support@equinixmetal.com
   * Your message across one of these mediums should be:
     * I am working with the Tanzu Terrafom deployment (github.com/packet-labs/packet-tanzu-tf). I need an entitlement increase to allow the creation of five or more vLans. Can you please assist?
 * [VMware vCenter Server 6.7U3](https://my.vmware.com/group/vmware/details?downloadGroup=VC67U3B&productId=742&rPId=40665) - VMware vCenter Server Appliance ISO obtained from VMware
 * [VMware vSAN Management SDK 6.7U3](https://my.vmware.com/group/vmware/details?downloadGroup=VSAN-MGMT-SDK67U3&productId=734) - Virtual SAN Management SDK for Python, also from VMware
 * [VMware NSX-T Virtual Appliance](https://docs.vmware.com/en/VMware-NSX-T-Data-Center/3.0/installation/GUID-A65FE3DD-C4F1-47EC-B952-DEDF1A3DD0CF.html) must be installed, and you must (after installation of vSphere has completed) a license for NSX-T Datacenter Advanced must be applied. All other license upgrades are handled via Terraform. 
  
-## Associated Packet Costs
-The default variables make use of 4 [c2.medium.x86](https://www.packet.com/cloud/servers/c2-medium-epyc/) servers. These servers are $1 per hour list price (resulting in a total solution price of roughly $4 per hour).
+## Associated Equinix Metal Costs
+The default variables make use of 4 [c2.medium.x86](https://metal.equinix.com/product/servers/) servers. These servers are $1 per hour list price (resulting in a total solution price of roughly $4 per hour).
 
-You can also deploy just 2 [c2.medium.x86](https://www.packet.com/cloud/servers/c2-medium-epyc/) servers for $2 per hour instead.
+You can also deploy just 2 [c2.medium.x86](https://metal.equinix.com/product/servers/) servers for $2 per hour instead.
 
 
 ## Install Terraform 
@@ -82,7 +83,7 @@ vcenter_iso_name = "VMware-VCSA-all-6.7.0-XXXXXXX.iso"
 EOF 
 ```  
 
-If you do not have a Minio or other S3 compatible object store available, for the purposes of this project, you can spin one up on Packet using the `minio_host` Terraform module in this project by copying the example instance into a new Terraform plan:
+If you do not have a Minio or other S3 compatible object store available, for the purposes of this project, you can spin one up on Equinix Metal using the `minio_host` Terraform module in this project by copying the example instance into a new Terraform plan:
 
 ```bash
 cp minio_tf.example minio.tf
@@ -110,9 +111,9 @@ terraform apply -target=module.minio_host -auto-approve
 and the output will provide you with the S3 URL, access token, and secret key you can use for the above s3 variable, which you can use to add the above VMware files. 
 
 ## Modify your variables 
-There are many variables which can be set to customize your install within `00-vars.tf`. The default variables to bring up a 3 node vSphere cluster and Linux router using Packet's [c2.medium.x86](https://www.packet.com/cloud/servers/c2-medium-epyc/). Change each default variable at your own risk. 
+There are many variables which can be set to customize your install within `00-vars.tf`. The default variables to bring up a 3 node vSphere cluster and Linux router using Equinix Metal's [c2.medium.x86](https://metal.equinix.com/product/servers/). Change each default variable at your own risk. 
 
-There are some variables you must set with a terraform.tfvars files. You need to set `auth_token` & `organization_id` to connect to Packet and the `project_name` which will be created in Packet. You need to provide the vCenter ISO file name as `vcenter_iso_name`. 
+There are some variables you must set with a terraform.tfvars files. You need to set `auth_token` & `organization_id` to connect to Equinix Metal and the `project_name` which will be created in Equinix Metal. You need to provide the vCenter ISO file name as `vcenter_iso_name`. 
  
 Here is a quick command plus sample values to start file for you (make sure you adjust the variables to match your environment, pay specail attention that the `vcenter_iso_name` matches whats in your bucket): 
 ```bash 
@@ -124,7 +125,7 @@ vcenter_iso_name = "VMware-VCSA-all-6.7.0-XXXXXXX.iso"
 EOF 
 ``` 
  
-## Deploy the Packet vSphere cluster
+## Deploy the Equinix Metal vSphere cluster
  
 All there is left to do now is to deploy the cluster: 
 ```bash 
@@ -250,12 +251,12 @@ iptables on the edge-gateway to forward ports/IPs to VIP.
 ## Cleaning the environment
 To clean up a created environment (or a failed one), run `terraform destroy --auto-approve`.
 
-If this does not work for some reason, you can manually delete each of the resources created in Packet (including the project) and then delete your terraform state file, `rm -f terraform.tfstate`.
+If this does not work for some reason, you can manually delete each of the resources created in Equinix Metal (including the project) and then delete your terraform state file, `rm -f terraform.tfstate`.
 
-## Use an existing Packet project
-If you have an existing Packet project you can use it assuming the project has at least 5 available vlans, Packet project has a limit of 12 Vlans and this setup uses 5 of them.
+## Use an existing Equinix Metal project
+If you have an existing Equinix Metal project you can use it assuming the project has at least 5 available vlans, Equinix Metal project has a limit of 12 Vlans and this setup uses 5 of them.
 
-Get your Project ID, navigate to the Project from the packet.com console and click on PROJECT SETTINGS, copy the PROJECT ID.
+Get your Project ID, navigate to the Project from the console.equinix.com console and click on PROJECT SETTINGS, copy the PROJECT ID.
 
 add the following variables to your terraform.tfvars
 
@@ -267,15 +268,15 @@ project_id                        = "YOUR-PROJECT-ID"
 ## Troubleshooting
 Some common issues and fixes.
 
-### Error: The specified project contains insufficient public IPv4 space to complete the request. Please e-mail help@packet.com.
+### Error: The specified project contains insufficient public IPv4 space to complete the request. Please e-mail help@equinixmetal.com.
 
 Should be resolved in https://github.com/packet-labs/google-anthos/commit/f6668b1359683eb5124d6ab66457f3680072651a
 
-Due to recent changes to the Packet API, new organizations may be unable to use the Terraform to build ESXi servers. Packet is aware of the issue and is planning some fixes. In the meantime, if you hit this issue, email help@packet.com and request that your organization be white listed to deploy ESXi servers with the API. You should reference this project (https://github.com/packet-labs/vmware-tanzu) in your email.
+Due to recent changes to the Equinix Metal API, new organizations may be unable to use the Terraform to build ESXi servers. Equinix Metal is aware of the issue and is planning some fixes. In the meantime, if you hit this issue, email help@equinixmetal.com and request that your organization be white listed to deploy ESXi servers with the API. You should reference this project (https://github.com/packet-labs/vmware-tanzu) in your email.
 
 ### Error: POST https://api.packet.net/ports/e2385919-fd4c-410d-b71c-568d7a517896/disbond:
 
-At times the Packet API fails to recognize the ESXi host can be enabled for Layer 2 networking (more accurately Mixed/hybrid mode). The terraform will exit and you'll see
+At times the Equinix Metal API fails to recognize the ESXi host can be enabled for Layer 2 networking (more accurately Mixed/hybrid mode). The terraform will exit and you'll see
 ```bash
 Error: POST https://api.packet.net/ports/e2385919-fd4c-410d-b71c-568d7a517896/disbond: 422 This device is not enabled for Layer 2. Please contact support for more details. 
 
