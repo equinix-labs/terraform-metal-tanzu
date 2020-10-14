@@ -153,6 +153,10 @@ variable "domain_name" {
   default = "packet.local"
 }
 
+variable "nsx_domain_0" {
+  default = "packet.local"
+}
+
 variable "vpn_user" {
   default = "vm_admin"
 }
@@ -212,3 +216,11 @@ variable "stackdriver_key_name" {
   default = "stackdriver-key.json"
 }
 
+variable "nsx_manager_ova_name" {
+}
+
+variable "nsx_controller_ova_name" {
+}
+
+variable "nsx_edge_ova_name" {
+}
