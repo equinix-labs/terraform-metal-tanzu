@@ -9,6 +9,8 @@ variable "nsx_manager_ova_name" {}
 variable "nsx_controller_ova_name" {}
 variable "nsx_edge_ova_name" {}
 variable "nsx_domain_0" {}
+variable "router_host" {}
+variable "ssh_private_key" {}
 
 resource "random_string" "nsx_password" {
   length           = 16
@@ -41,7 +43,7 @@ data "template_file" "download_nsx" {
     nsx_manager_ova_name    = var.nsx_manager_ova_name
     nsx_controller_ova_name = var.nsx_controller_ova_name
     nsx_edge_ova_name       = var.nsx_edge_ova_name
-    ssh_private_key         = chomp(tls_private_key.ssh_key_pair.private_key_pem)
+    ssh_private_key         = var.ssh_private_key
   }
 }
 
@@ -50,7 +52,7 @@ resource "null_resource" "download_nsx_ova" {
     type        = "ssh"
     user        = "root"
     private_key = file("~/.ssh/${local.ssh_key_name}")
-    host        = packet_device.router.access_public_ipv4
+    host        = var.router_host
   }
 
   provisioner "file" {
@@ -74,7 +76,7 @@ data "template_file" "prepare_nsx" {
     NSX_CONTROLLER_OVA_FILE = "/root/${var.nsx_controller_ova_name}"
     NSX_EDGE_OVA_FILE       = "/root/${var.nsx_edge_ova_name}"
 
-    ssh_private_key = chomp(tls_private_key.ssh_key_pair.private_key_pem)
+    ssh_private_key = var.ssh_private_key
   }
 }
 
@@ -83,7 +85,7 @@ resource "null_resource" "prepare_nsx_ova" {
     type        = "ssh"
     user        = "root"
     private_key = file("~/.ssh/${local.ssh_key_name}")
-    host        = packet_device.router.access_public_ipv4
+    host        = var.router_host
   }
 
   provisioner "file" {
