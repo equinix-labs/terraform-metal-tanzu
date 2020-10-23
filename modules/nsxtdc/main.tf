@@ -11,6 +11,9 @@ variable "nsx_edge_ova_name" {}
 variable "nsx_domain_0" {}
 variable "router_host" {}
 variable "ssh_private_key" {}
+variable "vcva_host" {}
+variable "vcva_user" {}
+variable "vcva_password" {}
 
 resource "random_string" "nsx_password" {
   length           = 16
