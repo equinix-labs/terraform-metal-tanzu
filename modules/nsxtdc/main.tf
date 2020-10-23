@@ -69,18 +69,29 @@ resource "null_resource" "download_nsx_ova" {
   }
 }
 
-data "template_file" "prepare_nsx" {
-  template = file("${path.module}/prepare_nsx.sh")
+data "template_file" "deploy_nsx" {
+  template = file("${path.module}/templates/deploy_nsx.sh")
   vars = {
     NSX_MANAGER_OVA_FILE    = "/root/${var.nsx_manager_ova_name}"
     NSX_CONTROLLER_OVA_FILE = "/root/${var.nsx_controller_ova_name}"
     NSX_EDGE_OVA_FILE       = "/root/${var.nsx_edge_ova_name}"
-
-    ssh_private_key = var.ssh_private_key
+    VCVA_HOST               = var.vcva_host
+    VCVA_USER               = var.vcva_user
+    VCVA_PASSWORD           = var.vcva_password
+    ssh_private_key         = var.ssh_private_key
   }
 }
 
-resource "null_resource" "prepare_nsx_ova" {
+data "template_file" "nsx_template" {
+  template = file("${path.module}/templates/nsx_template.json")
+  vars = {
+    NSX_PASSWD     = random_string.nsx_password.result
+    NSX_CLI_PASSWD = random_string.nsx_cli_password.result
+    NSX_DOMAIN     = var.nsx_domain_0
+  }
+}
+
+resource "null_resource" "deploy_nsx_ova" {
   connection {
     type        = "ssh"
     user        = "root"
@@ -89,15 +100,20 @@ resource "null_resource" "prepare_nsx_ova" {
   }
 
   provisioner "file" {
-    content     = data.template_file.prepare_nsx.rendered
-    destination = "/root/prepare_nsx.sh"
+    content     = data.template_file.nsx_template.rendered
+    destination = "/root/nsx-manager.json"
+  }
+
+  provisioner "file" {
+    content     = data.template_file.deploy_nsx.rendered
+    destination = "/root/deploy_nsx.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
       "cd /root",
-      "chmod +x /root/prepare_nsx.sh",
-      "/root/prepare_nsx.sh"
+      "chmod +x /root/deploy_nsx.sh",
+      "sh /root/prepare_nsx.sh"
     ]
   }
 }

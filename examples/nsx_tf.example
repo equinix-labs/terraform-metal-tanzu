@@ -1,16 +1,22 @@
 module "nsx-dc" {
-  source                  = "./modules/nsxtdc"
-  router_host             = packet_device.router.access_public_ipv4
+  source      = "./modules/nsxtdc"
+  router_host = packet_device.router.access_public_ipv4
+
   ssh_private_key         = chomp(tls_private_key.ssh_key_pair.private_key_pem)
   nsx_manager_ova_name    = var.nsx_manager_ova_name
   nsx_controller_ova_name = var.nsx_controller_ova_name
   nsx_edge_ova_name       = var.nsx_edge_ova_name
   nsx_domain_0            = var.nsx_domain_0
-  s3_boolean              = var.s3_boolean
-  s3_url                  = var.s3_url
-  s3_access_key           = var.s3_access_key
-  s3_secret_key           = var.s3_secret_key
-  s3_bucket_name          = var.s3_bucket_name
+
+  vcva_host     = "vcva.packet.local"
+  vcva_user     = "Administrator@vsphere.local"
+  vcva_password = random_string.sso_password.result
+
+  s3_boolean     = var.s3_boolean
+  s3_url         = var.s3_url
+  s3_access_key  = var.s3_access_key
+  s3_secret_key  = var.s3_secret_key
+  s3_bucket_name = var.s3_bucket_name
 }
 
 output "nsx-datacenter" {

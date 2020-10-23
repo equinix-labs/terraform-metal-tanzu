@@ -216,11 +216,16 @@ variable "stackdriver_key_name" {
   default = "stackdriver-key.json"
 }
 
-variable "nsx_manager_ova_name" {
-}
+# Use these variables if/when deploying with the NSX module once the OVAs are in your S3 store.
 
-variable "nsx_controller_ova_name" {
-}
+#variable "nsx_manager_ova_name" {
+#}
 
-variable "nsx_edge_ova_name" {
-}
+#variable "nsx_controller_ova_name" {
+#}
+
+#variable "nsx_edge_ova_name" {
+#}
+
+# variable "nsx_domain_0" {
+# }

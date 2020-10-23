@@ -1,0 +1,102 @@
+{
+    "Deployment": "medium",
+    "DiskProvisioning": "thin",
+    "IPAllocationPolicy": "fixedPolicy",
+    "IPProtocol": "IPv4",
+    "InjectOvfEnv": false,
+    "Name": null,
+    "NetworkMapping": [
+        {
+            "Name": "Network 1",
+            "Network": "VM Network"
+        }
+    ],
+    "PowerOn": true,
+    "PropertyMapping": [
+        {
+            "Key": "nsx_passwd_0",
+            "Value": "${NSX_PASSWD}"
+        },
+        {
+            "Key": "nsx_cli_passwd_0",
+            "Value": "${NSX_CLI_PASSWD}"
+        },
+        {
+            "Key": "nsx_cli_audit_passwd_0",
+            "Value": "${NSX_CLI_PASSWD}"
+        },
+        {
+            "Key": "nsx_cli_username",
+            "Value": "admin"
+        },
+        {
+            "Key": "nsx_cli_audit_username",
+            "Value": "audit"
+        },
+        {
+            "Key": "extraPara",
+            "Value": ""
+        },
+        {
+            "Key": "nsx_hostname",
+            "Value": "${VCVA_HOST}"
+        },
+        {
+            "Key": "nsx_role",
+            "Value": "nsx-manager"
+        },
+        {
+            "Key": "nsx_gateway_0",
+            "Value": "172.18.28.1"
+        },
+        {
+            "Key": "nsx_ip_0",
+            "Value": "172.18.28.4"
+        },
+        {
+            "Key": "nsx_netmask_0",
+            "Value": "255.255.255.0"
+        },
+        {
+            "Key": "nsx_dns1_0",
+            "Value": "172.18.28.1"
+        },
+        {
+            "Key": "nsx_domain_0",
+            "Value": "${NSX_DOMAIN}"
+        },
+        {
+            "Key": "nsx_ntp_0",
+            "Value": "172.18.28.1"
+        },
+        {
+            "Key": "nsx_isSSHEnabled",
+            "Value": "True"
+        },
+        {
+            "Key": "nsx_allowSSHRootLogin",
+            "Value": "True"
+        },
+        {
+            "Key": "mpIp",
+            "Value": ""
+        },
+        {
+            "Key": "mpToken",
+            "Value": ""
+        },
+        {
+            "Key": "mpThumbprint",
+            "Value": ""
+        },
+        {
+            "Key": "mpNodeId",
+            "Value": ""
+        },
+        {
+            "Key": "mpClusterId",
+            "Value": ""
+        }
+    ],
+    "WaitForIP": false
+}
