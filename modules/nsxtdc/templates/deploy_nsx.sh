@@ -11,3 +11,4 @@ export GOVC_DATASTORE=Datastore
 export GOVC_NETWORK=VM Network
 
 govc import.ova --options=/root/nsx-manager.json /root/${NSX_MANAGER_OVA_FILE}
+
