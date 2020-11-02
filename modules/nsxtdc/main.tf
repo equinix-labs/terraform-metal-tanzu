@@ -14,6 +14,9 @@ variable "ssh_private_key" {}
 variable "vcva_host" {}
 variable "vcva_user" {}
 variable "vcva_password" {}
+variable "ssh_key_name" {
+  default = "id_rsa"
+}
 
 resource "random_string" "nsx_password" {
   length           = 16
@@ -34,7 +37,7 @@ resource "random_string" "nsx_cli_password" {
 }
 
 data "template_file" "download_nsx" {
-  template = file("${path.module}/download_nsx.sh")
+  template = file("${path.module}/templates/download_nsx.sh")
   vars = {
     gcs_bucket_name         = var.gcs_bucket_name
     storage_reader_key_name = var.storage_reader_key_name
@@ -54,7 +57,7 @@ resource "null_resource" "download_nsx_ova" {
   connection {
     type        = "ssh"
     user        = "root"
-    private_key = file("~/.ssh/${local.ssh_key_name}")
+    private_key = file("~/.ssh/${var.ssh_key_name}")
     host        = var.router_host
   }
 
@@ -86,7 +89,7 @@ data "template_file" "deploy_nsx" {
 }
 
 data "template_file" "nsx_template" {
-  template = file("${path.module}/templates/nsx_template.json")
+  template = file("${path.module}/templates/nsx-template.json")
   vars = {
     NSX_PASSWD     = random_string.nsx_password.result
     NSX_CLI_PASSWD = random_string.nsx_cli_password.result
@@ -98,7 +101,7 @@ resource "null_resource" "deploy_nsx_ova" {
   connection {
     type        = "ssh"
     user        = "root"
-    private_key = file("~/.ssh/${local.ssh_key_name}")
+    private_key = file("~/.ssh/${var.ssh_key_name}")
     host        = var.router_host
   }
 
