@@ -20,7 +20,9 @@ To use these Terraform files, you need to have the following Prerequisites:
     * I am working with the Tanzu Terrafom deployment (github.com/packet-labs/packet-tanzu-tf). I need an entitlement increase to allow the creation of five or more vLans. Can you please assist?
 * [VMware vCenter Server 6.7U3](https://my.vmware.com/group/vmware/details?downloadGroup=VC67U3B&productId=742&rPId=40665) - VMware vCenter Server Appliance ISO obtained from VMware
 * [VMware vSAN Management SDK 6.7U3](https://my.vmware.com/group/vmware/details?downloadGroup=VSAN-MGMT-SDK67U3&productId=734) - Virtual SAN Management SDK for Python, also from VMware
+
 If you do not use the NSX-T module in this project, and wish to install it manually:
+
 * [VMware NSX-T Virtual Appliance](https://docs.vmware.com/en/VMware-NSX-T-Data-Center/3.0/installation/GUID-A65FE3DD-C4F1-47EC-B952-DEDF1A3DD0CF.html) must be installed, and you must (after installation of vSphere has completed) a license for NSX-T Datacenter Advanced must be applied. All other license upgrades are handled via Terraform. 
  
 ## Associated Packet Costs
@@ -191,6 +193,8 @@ Deploying the NSX Manager appliance via Terraform module is as follows:
 cp examples/nsx_tf.example nsx_manager.tf
 terraform apply -target=module.nsxt
 ```
+
+Unlike the licenses for the other VMware products, the Terraform provider for NSX does not currently support applying a license, a license for NSX-T Datacenter Advanced must be applied after this module is installed. This can be done in the NSX manager UI, or via [the NSX API](https://www.vmware.com/support/nsxt/doc/nsxt_20_api.html#Methods.UpdateLicense).
 
 ## Deploying Kubernetes
 
