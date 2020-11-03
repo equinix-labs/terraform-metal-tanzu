@@ -21,6 +21,9 @@ To use these Terraform files, you need to have the following Prerequisites:
     * I am working with the Tanzu Terrafom deployment (github.com/packet-labs/packet-tanzu-tf). I need an entitlement increase to allow the creation of five or more vLans. Can you please assist?
 * [VMware vCenter Server 6.7U3](https://my.vmware.com/group/vmware/details?downloadGroup=VC67U3B&productId=742&rPId=40665) - VMware vCenter Server Appliance ISO obtained from VMware
 * [VMware vSAN Management SDK 6.7U3](https://my.vmware.com/group/vmware/details?downloadGroup=VSAN-MGMT-SDK67U3&productId=734) - Virtual SAN Management SDK for Python, also from VMware
+
+If you do not use the NSX-T module in this project, and wish to install it manually:
+
 * [VMware NSX-T Virtual Appliance](https://docs.vmware.com/en/VMware-NSX-T-Data-Center/3.0/installation/GUID-A65FE3DD-C4F1-47EC-B952-DEDF1A3DD0CF.html) must be installed, and you must (after installation of vSphere has completed) a license for NSX-T Datacenter Advanced must be applied. All other license upgrades are handled via Terraform. 
  
 ## Associated Equinix Metal Costs
@@ -159,7 +162,7 @@ which should have been automatically generated as a side-effect of the "terrafor
 The `vsphere-license` module can be used to apply your [vSphere 7 Enterprise Plus license](https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-kubernetes/GUID-9A190942-BDB1-4A19-BA09-728820A716F2.html) and other licenses required for this project's features:
 
 ```bash
-cp vsphere_license.example license.tf
+cp examples/vsphere_license.example license.tf
 terraform apply -target=module.vpshere_license
 terraform apply -target=module.vsphere_addon_license
 terraform apply -target=module.vsphere_enterprise_license
@@ -174,12 +177,32 @@ vsphere_license            = "XXXX-XXXX-XXXX-XXXX-XXXX" #vSphere Standard
 
 At present, the VMware NSX Terraform provider does not have the capability to apply licenses for the NSX-T product, which will also require a Datacenter Advanced license in order to use Tanzu, which can be added via the NSX UI, or [using the NSX API](https://www.vmware.com/support/nsxt/doc/nsxt_20_api.html#Methods.UpdateLicense).
 
+## Deploying NSX Datacenter
+
+**Note** the NSX module requires additional VMware appliances. [Download your appliances from your VMware portal](https://my.vmware.com/en/group/vmware/downloads/), and as you did with the vSphere ISO, add them to your Object Storage, and update the following variables in your `tfvars` before proceeding:
+
+```go
+nsx_manager_ova_name = ""
+nsx_controller_ova_name = ""
+nsx_edge_ova_name = ""
+nsx_domain_0 = "" 
+```
+
+Deploying the NSX Manager appliance via Terraform module is as follows:
+
+```bash
+cp examples/nsx_tf.example nsx_manager.tf
+terraform apply -target=module.nsxt
+```
+
+Unlike the licenses for the other VMware products, the Terraform provider for NSX does not currently support applying a license, a license for NSX-T Datacenter Advanced must be applied after this module is installed. This can be done in the NSX manager UI, or via [the NSX API](https://www.vmware.com/support/nsxt/doc/nsxt_20_api.html#Methods.UpdateLicense).
+
 ## Deploying Kubernetes
 
 Once the upgrades licenses are applied, you can, either, [create a supervisor namespace and cluster from the UI](https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-kubernetes/GUID-177C23C4-ED81-4ADD-89A2-61654C18201B.html) in vSphere, or use the bootstrapping module for a basic cluster:
 
 ```bash
-cp tanzu_tf.example supervisor.tf
+cp examples/tanzu_tf.example supervisor.tf
 terraform apply -target=module.tanzu
 ```
 and complete the supervisor cluster spec configuration (i.e. ranges for ingress, egress, storage policy IDs, etc.)
