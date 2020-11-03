@@ -1,3 +1,16 @@
+variable "nsx_manager_ova_name" {
+}
+
+variable "nsx_controller_ova_name" {
+}
+
+variable "nsx_edge_ova_name" {
+}
+
+variable "nsx_domain_0" {
+  default = "packet.local"
+}
+
 module "nsx-dc" {
   source      = "./modules/nsxtdc"
   router_host = packet_device.router.access_public_ipv4
