@@ -7,8 +7,20 @@ variable "nsx_controller_ova_name" {
 variable "nsx_edge_ova_name" {
 }
 
+variable "nsx_license" {
+}
+
 variable "nsx_domain_0" {
   default = "packet.local"
+}
+
+terraform {
+  required_providers {
+    nsxt = {
+      source  = "vmware/nsxt"
+      version = "3.1.0"
+    }
+  }
 }
 
 module "nsx-dc" {
@@ -20,6 +32,8 @@ module "nsx-dc" {
   nsx_controller_ova_name = var.nsx_controller_ova_name
   nsx_edge_ova_name       = var.nsx_edge_ova_name
   nsx_domain_0            = var.nsx_domain_0
+
+  nsx_license = var.nsx_license
 
   vcva_host     = "vcva.packet.local"
   vcva_user     = "Administrator@vsphere.local"
@@ -38,3 +52,16 @@ module "nsx-dc" {
 output "nsx-datacenter" {
   value = "NSX Password:\n\t${module.nsx-dc.nsx_password}\n\nNSX CLI Password:\n\t${module.nsx-dc.nsx_cli_password}\n"
 }
+
+provider "nsxt" {
+  host                  = "" #This value will be in vSphere after the above module deploys.
+  username              = "admin"
+  password              = module.nsx-dc.nsx_password
+  allow_unverified_ssl  = true
+  max_retries           = 10
+  retry_min_delay       = 500
+  retry_max_delay       = 5000
+  retry_on_status_codes = [429]
+  license_keys          = [var.nsx_license]
+}
+
