@@ -76,7 +76,7 @@ Here is the create variable file command again, modified for S3:
 cat <<EOF >terraform.tfvars 
 auth_token = "" 
 organization_id = "" 
-project_name = "vmware-packet-project-1"
+project_name = "vmware-metal-project-1"
 s3_boolean = "true"
 s3_url = "https://s3.example.com" 
 s3_bucket_name = "vmware" 
@@ -99,7 +99,7 @@ Here is a quick command plus sample values to start file for you (make sure you 
 cat <<EOF >terraform.tfvars 
 auth_token = "cefa5c94-e8ee-4577-bff8-1d1edca93ed8" 
 organization_id = "42259e34-d300-48b3-b3e1-d5165cd14169" 
-project_name = "tanzu-packet-project-1"
+project_name = "tanzu-metal-project-1"
 vcenter_iso_name = "VMware-VCSA-all-6.7.0-XXXXXXX.iso" 
 EOF 
 ``` 
@@ -125,7 +125,7 @@ VPN_PSK = @1!64v7$PLuIIir9TPIJ
 VPN_Pasword = n3$xi@S*ZFgUbB5k
 VPN_User = vm_admin
 vCenter_Appliance_Root_Password = *XjryDXx*P8Y3c1$
-vCenter_FQDN = vcva.packet.local
+vCenter_FQDN = vcva.metal.local
 vCenter_Password = 3@Uj7sor7v3I!4eo
 ```
 
@@ -230,7 +230,7 @@ ssh -i ~/.ssh/<private-ssh-key-created-by-project> root@VPN_Endpoint
 ```
 
 ## Connect to the vCenter
-Connecting to the vCenter requires that the VPN be established. Once the VPN is connected, launch a browser to https://vcva.packet.local/ui.
+Connecting to the vCenter requires that the VPN be established. Once the VPN is connected, launch a browser to https://vcva.metal.local/ui.
 You’ll need to accept the self-signed certificate, and then enter the
 `vCenter_Username` and `vCenter_Password`
 provided in the Outputs of the run of "terraform apply"
@@ -282,8 +282,8 @@ At times the Equinix Metal API fails to recognize the ESXi host can be enabled f
 ```bash
 Error: POST https://api.equinix.com/metal/v1/ports/e2385919-fd4c-410d-b71c-568d7a517896/disbond: 422 This device is not enabled for Layer 2. Please contact support for more details. 
 
-  on 04-esx-hosts.tf line 1, in resource "packet_device" "esxi_hosts":
-   1: resource "packet_device" "esxi_hosts" {
+  on 04-esx-hosts.tf line 1, in resource "metal_device" "esxi_hosts":
+   1: resource "metal_device" "esxi_hosts" {
 ```
 
 If this happens, you can issue `terraform apply --auto-approve` again and the problematic ESXi host(s) should be deleted and recreated again properly. Or you can perform `terraform destroy --auto-approve` and start over again.

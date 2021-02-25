@@ -1,8 +1,8 @@
 terraform {
   required_providers {
-    packet = {
-      source  = "terraform-providers/packet"
-      version = "2.7.5"
+    metal = {
+      source = "equinix/metal"
+      version = "1.0.0"
     }
     local = {
       source = "hashicorp/local"
@@ -37,12 +37,12 @@ variable "organization_id" {
 }
 
 variable "project_name" {
-  default = "tanzu-packet"
+  default = "tanzu-metal"
 }
 
 
 variable "create_project" {
-  description = "if true create the packet project, if not skip and use the provided project"
+  description = "if true create the metal project, if not skip and use the provided project"
   default     = true
   type        = bool
 }
@@ -150,7 +150,7 @@ variable "vcenter_portgroup_name" {
 }
 
 variable "domain_name" {
-  default = "packet.local"
+  default = "metal.local"
 }
 
 variable "vpn_user" {
