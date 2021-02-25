@@ -86,32 +86,8 @@ vcenter_iso_name = "VMware-VCSA-all-6.7.0-XXXXXXX.iso"
 EOF 
 ```  
 
-If you do not have a Minio or other S3 compatible object store available, for the purposes of this project, you can spin one up on Equinix Metal using the `minio_host` Terraform module in this project by copying the example instance into a new Terraform plan:
+If you do not have a Minio or other S3 compatible object store available, the [`equinix/distributed-minio` Terraform module](https://registry.terraform.io/modules/equinix/distributed-minio/metal/latest) can be used to create a MinIO, S3-compatible object-store for use with this project-- you can use the outputs from this module to find the `s3_access_key`, `s3_secret_key`, and `s3_url` before proceeding to upload the ISOs as shown above.
 
-```bash
-cp minio_tf.example minio.tf
-```
-
-Deploying minio requires an extra parameter added to the `terraform.tfvars` file, which is a project ID. Minio won't be deployed to your Tanzu project, it is encouraged to keep this separate.
-
-```
-minio_project_id = "UUID"
-```
-
-By default, minio will be deployed on a `x1.small.x86` machine. If you wish to change this, you can also override it inside `terraform.tfvars`.
-
-```
-minio_plan = "t1.small"
-```
-
-You can now run a `terraform apply`, targetting only our Minio resources.
-
-```bash
-terraform apply -target=module.minio_credentials -auto-approve
-terraform apply -target=module.minio_host -auto-approve
-```
-
-and the output will provide you with the S3 URL, access token, and secret key you can use for the above s3 variable, which you can use to add the above VMware files. 
 
 ## Modify your variables 
 There are many variables which can be set to customize your install within `00-vars.tf`. The default variables to bring up a 3 node vSphere cluster and Linux router using Equinix Metal's [c2.medium.x86](https://metal.equinix.com/product/servers/). Change each default variable at your own risk. 
@@ -129,11 +105,14 @@ EOF
 ``` 
  
 ## Deploy the Equinix Metal vSphere cluster
- 
-All there is left to do now is to deploy the cluster: 
+
+In `main.tf`, we are importing the [vSphere Terraform module](https://registry.terraform.io/modules/equinix/vsphere/metal/latest?tab=inputs) where you'll see the above are imported, and on the registry page, you can see additional options for deploying vSphere. 
+
 ```bash 
-terraform apply --auto-approve 
+terraform apply -target=module.vsphere`
 ``` 
+If you used something like the distributed-minio module to deploy your object storage, you can set values for things like `s3_access_key` in that module instance to `module.distributed-minio.s3_access_key` etc.
+
 This should end with output similar to this: 
 ``` 
 Apply complete! Resources: 50 added, 0 changed, 0 destroyed. 
@@ -297,11 +276,11 @@ Should be resolved in https://github.com/packet-labs/google-anthos/commit/f6668b
 
 Due to recent changes to the Equinix Metal API, new organizations may be unable to use the Terraform to build ESXi servers. Equinix Metal is aware of the issue and is planning some fixes. In the meantime, if you hit this issue, email help@equinixmetal.com and request that your organization be white listed to deploy ESXi servers with the API. You should reference this project (https://github.com/packet-labs/vmware-tanzu) in your email.
 
-### Error: POST https://api.packet.net/ports/e2385919-fd4c-410d-b71c-568d7a517896/disbond:
+### Error: POST https://api.equinix.com/metal/v1/ports/e2385919-fd4c-410d-b71c-568d7a517896/disbond:
 
 At times the Equinix Metal API fails to recognize the ESXi host can be enabled for Layer 2 networking (more accurately Mixed/hybrid mode). The terraform will exit and you'll see
 ```bash
-Error: POST https://api.packet.net/ports/e2385919-fd4c-410d-b71c-568d7a517896/disbond: 422 This device is not enabled for Layer 2. Please contact support for more details. 
+Error: POST https://api.equinix.com/metal/v1/ports/e2385919-fd4c-410d-b71c-568d7a517896/disbond: 422 This device is not enabled for Layer 2. Please contact support for more details. 
 
   on 04-esx-hosts.tf line 1, in resource "packet_device" "esxi_hosts":
    1: resource "packet_device" "esxi_hosts" {

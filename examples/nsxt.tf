@@ -11,7 +11,7 @@ variable "nsx_license" {
 }
 
 variable "nsx_domain_0" {
-  default = "packet.local"
+  default = "metal.local"
 }
 
 terraform {
