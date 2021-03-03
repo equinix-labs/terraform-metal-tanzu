@@ -108,6 +108,24 @@ EOF
 
 In `main.tf`, we are importing the [vSphere Terraform module](https://registry.terraform.io/modules/equinix/vsphere/metal/latest?tab=inputs) where you'll see the above are imported, and on the registry page, you can see additional options for deploying vSphere. 
 
+You can instantiate this module (and use for the rest of the examples) using a plan like:
+
+```
+module "vsphere" {
+  source           = "equinix/vsphere/metal"
+  version          = "2.1.0"
+  auth_token       = var.auth_token
+  organization_id  = var.organization_id
+  project_name     = "tanzu-on-metal"
+  s3_url           = var.s3_url
+  s3_access_key    = var.s3_access_key
+  s3_secret_key    = var.s3_secret_key
+  vcenter_iso_name = var.vcenter_iso_name
+  create_project   = var.create_project
+  domain_name      = var.domain_name
+}
+```
+
 ```bash 
 terraform apply -target=module.vsphere`
 ``` 
@@ -142,6 +160,38 @@ The `vsphere-license` module can be used to apply your [vSphere 7 Enterprise Plu
 
 ```bash
 cp examples/vsphere_license.example license.tf
+```
+or import the submodules:
+
+```
+module "vsphere_license" {
+  source              = "equinix/tanzu/metal/vsphere-license"
+  vsphere_server      = module.vsphere.vsphere_fqdn
+  vsphere_user        = module.vsphere.vsphere_username
+  vsphere_password    = module.vsphere.vsphere_root_password
+  license_key         = var.vsphere_license
+  product_description = "vSphere 7 Standard"
+}
+
+module "vsphere_enterprise_license" {
+  source              = "equinix/tanzu/metal/vsphere-license"
+  vsphere_server      = module.vsphere.vsphere_fqdn
+  vsphere_user        = module.vsphere.vsphere_username
+  vsphere_password    = module.vsphere.vsphere_root_password
+  license_key         = var.vsphere_enterprise_license
+  product_description = "vSphere 7 Enterprise"
+}
+
+module "vsphere_addon_license" {
+  source              = "equinix/tanzu/metal/vsphere-license"
+  vsphere_server      = module.vsphere.vsphere_fqdn
+  vsphere_user        = module.vsphere.vsphere_username
+  vsphere_password    = module.vsphere.vsphere_root_password
+  license_key         = var.vsphere_addon_license
+  product_description = "vSphere 7 Kubernetes Addon"
+}
+```
+
 terraform apply -target=module.vpshere_license
 terraform apply -target=module.vsphere_addon_license
 terraform apply -target=module.vsphere_enterprise_license
@@ -171,7 +221,53 @@ Deploying the NSX Manager appliance via Terraform module is as follows:
 
 ```bash
 cp examples/nsx_tf.example nsx_manager.tf
+```
+or import the submodule:
+
+```
+module "nsx-dc" {
+  source      = "equinix/tanzu/metal/nsxtdc"
+  router_host = module.vsphere.bastion_ip
+
+  ssh_private_key         = chomp(module.vsphere.tls_private_key.ssh_key_pair.private_key_pem)
+  nsx_manager_ova_name    = var.nsx_manager_ova_name
+  nsx_controller_ova_name = var.nsx_controller_ova_name
+  nsx_edge_ova_name       = var.nsx_edge_ova_name
+  nsx_domain_0            = var.nsx_domain_0
+
+  nsx_license = var.nsx_license
+
+  vcva_host     = module.vsphere.vsphere_fqdn
+  vcva_user     = module.vsphere.vsphere_username
+  vcva_password = module.vsphere.vsphere_root_password
+  # Using S3 options as you did for vSphere
+  s3_boolean     = var.s3_boolean
+  s3_url         = var.s3_url
+  s3_access_key  = var.s3_access_key
+  s3_secret_key  = var.s3_secret_key
+  s3_bucket_name = var.s3_bucket_name
+}
+```
+and applying:
+
+```
 terraform apply -target=module.nsxt
+```
+
+and then use this submodule's outputs to configure NSX to your specification:
+
+```
+provider "nsxt" {
+  host                  = "" #This value will be in vSphere after the above module deploys.
+  username              = "admin"
+  password              = module.nsx-dc.nsx_password
+  allow_unverified_ssl  = true
+  max_retries           = 10
+  retry_min_delay       = 500
+  retry_max_delay       = 5000
+  retry_on_status_codes = [429]
+  license_keys          = [var.nsx_license]
+}
 ```
 
 Unlike the licenses for the other VMware products, the Terraform provider for NSX does not currently support applying a license, a license for NSX-T Datacenter Advanced must be applied after this module is installed. This can be done in the NSX manager UI, or via [the NSX API](https://www.vmware.com/support/nsxt/doc/nsxt_20_api.html#Methods.UpdateLicense).
@@ -181,10 +277,10 @@ Unlike the licenses for the other VMware products, the Terraform provider for NS
 Once the upgrades licenses are applied, you can, either, [create a supervisor namespace and cluster from the UI](https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-kubernetes/GUID-177C23C4-ED81-4ADD-89A2-61654C18201B.html) in vSphere, or use the bootstrapping module for a basic cluster:
 
 ```bash
-cp examples/tanzu_tf.example supervisor.tf
-terraform apply -target=module.tanzu
+terraform plan
+terraform apply
 ```
-and complete the supervisor cluster spec configuration (i.e. ranges for ingress, egress, storage policy IDs, etc.)
+from the root module, and complete the supervisor cluster spec configuration (i.e. ranges for ingress, egress, storage policy IDs, etc.)
 
 ## Size of the vSphere Cluster
 The code supports deploying a single ESXi server or a 3+ node vSAN cluster. Default settings are for 3 ESXi nodes with vSAN.

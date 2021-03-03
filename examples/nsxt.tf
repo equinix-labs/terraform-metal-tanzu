@@ -25,9 +25,9 @@ terraform {
 
 module "nsx-dc" {
   source      = "./modules/nsxtdc"
-  router_host = packet_device.router.access_public_ipv4
+  router_host = module.vsphere.metal_device.router.access_public_ipv4
 
-  ssh_private_key         = chomp(tls_private_key.ssh_key_pair.private_key_pem)
+  ssh_private_key         = chomp(module.vsphere.tls_private_key.ssh_key_pair.private_key_pem)
   nsx_manager_ova_name    = var.nsx_manager_ova_name
   nsx_controller_ova_name = var.nsx_controller_ova_name
   nsx_edge_ova_name       = var.nsx_edge_ova_name
@@ -35,7 +35,7 @@ module "nsx-dc" {
 
   nsx_license = var.nsx_license
 
-  vcva_host     = "vcva.packet.local"
+  vcva_host     = "vcva.metal.local"
   vcva_user     = "Administrator@vsphere.local"
   vcva_password = random_string.sso_password.result
   # Using S3-compatible Object Storage
@@ -49,8 +49,12 @@ module "nsx-dc" {
   gcs_bucket_name         = var.gcs_bucket_name
 }
 
-output "nsx-datacenter" {
-  value = "NSX Password:\n\t${module.nsx-dc.nsx_password}\n\nNSX CLI Password:\n\t${module.nsx-dc.nsx_cli_password}\n"
+output "nsx-datacenter-pasword" {
+  value = module.nsx-dc.nsx_password
+}
+
+output "nsx-datacenter-cli-password" {
+  value = module.nsx-dc.nsx_cli_password
 }
 
 provider "nsxt" {
