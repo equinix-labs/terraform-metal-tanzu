@@ -19,15 +19,11 @@ terraform {
     tls = {
       source = "hashicorp/tls"
     }
+    nsxt = {
+      source  = "vmware/nsxt"
+      version = "3.1.0"
+    }
   }
-}
-
-variable "minio_plan" {
-  default = "x1.small.x86"
-}
-
-variable "minio_project_id" {
-  default = "null"
 }
 
 variable "auth_token" {
@@ -48,7 +44,7 @@ variable "create_project" {
 }
 
 variable "project_id" {
-  description = "Packet Project ID to use in case create_project is false"
+  description = "Equinix Metal Project ID to use in case create_project is false"
   default     = "null"
 }
 
@@ -211,3 +207,24 @@ variable "register_key_name" {
 variable "stackdriver_key_name" {
   default = "stackdriver-key.json"
 }
+
+variable "nsuser" {}
+variable "nsdomain" {}
+variable "cluster_name" {}
+variable "namespace" {}
+variable "storagepolicy" {}
+variable "storagelimit" {}
+variable "cp_vm_network" {}
+variable "cp_subnet_mask" {}
+variable "cp_gateway_ip" {}
+variable "starting_ip" {}
+variable "dns_server" {}
+variable "ntp_server" {}
+variable "storage_policy_name" {}
+variable "egress_starting_ip" {}
+variable "ingress_starting_ip" {}
+
+variable "vsphere_license" {}
+variable "vsphere_addon_license" {}
+variable "vsphere_enterprise_license" {}
+
