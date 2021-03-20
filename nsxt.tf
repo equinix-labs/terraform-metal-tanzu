@@ -50,7 +50,9 @@ output "nsx-datacenter-cli-password" {
 }
 
 provider "nsxt" {
-  host                  = "" #This value will be in vSphere after the above module deploys.
+  # TODO This value will be in vSphere after the above module deploys.
+  # TODO set it to the dynamic value
+  host                  = ""
   username              = "admin"
   password              = module.nsx-dc.nsx_password
   allow_unverified_ssl  = true
