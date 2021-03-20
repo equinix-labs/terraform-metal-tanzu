@@ -10,9 +10,9 @@ output "VPN_User" {
   value = module.vsphere.vpn_user
 }
 
-output "VPN_Pasword" {
+output "VPN_Password" {
   # TODO the typo is corrected in the next module version (currently unreleased)
-  value = module.vsphere.vpn_pasword
+  value = module.vsphere.vpn_password
 }
 
 output "vCenter_FQDN" {
