@@ -20,8 +20,6 @@ jobs:
         os: [ubuntu-latest]
         tf: [0.13.2]
         vsphere:
-        - vmware_os: vmware_esxi_6_7
-          vcenter_iso: VMware-VCSA-all-6.7.0-14367737.iso
         - vmware_os: vmware_esxi_7_0
           vcenter_iso: VMware-VCSA-all-7.0.0-16189094.iso
     env:
