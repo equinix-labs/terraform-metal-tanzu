@@ -4,8 +4,8 @@ data "template_file" "create_namespace" {
     host          = module.vsphere.vcenter_fqdn
     user          = module.vsphere.vcenter_username
     password      = module.vsphere.vcenter_root_password
-    nsuser        = var.nsuser
-    nsdomain      = var.nsdomain
+    nsuser        = "admin"
+    nsdomain      = module.nsx-dc.nsx_password
     clustername   = var.cluster_name
     namespace     = var.namespace
     storagepolicy = var.storagepolicy
@@ -18,7 +18,7 @@ resource "null_resource" "namespace_config" {
     type        = "ssh"
     user        = "root"
     private_key = file("~/.ssh/${var.ssh_key_name}")
-    host        = var.router_address
+    host        = module.vsphere.bastion_host
   }
 
   provisioner "file" {
@@ -33,7 +33,7 @@ resource "null_resource" "apply_namespace_config" {
     type        = "ssh"
     user        = "root"
     private_key = file("~/.ssh/${var.ssh_key_name}")
-    host        = var.router_address
+    host        = module.vsphere.bastion_host
   }
 
   provisioner "remote-exec" {

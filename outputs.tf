@@ -1,21 +1,17 @@
 output "VPN_Endpoint" {
-  value = packet_device.router.access_public_ipv4
+  value = module.vsphere.metal_device.router.access_public_ipv4
 }
 
 output "VPN_PSK" {
-  value = random_string.ipsec_psk.result
-}
-
-output "VPN_User" {
-  value = var.vpn_user
+  value = module.vsphere.random_string.ipsec_psk.result
 }
 
 output "VPN_Pasword" {
-  value = random_string.vpn_pass.result
+  value = module.vsphere.random_string.vpn_pass.result
 }
 
 output "vCenter_FQDN" {
-  value = "vcva.packet.local"
+  value = "vcva.metal.local"
 }
 
 output "vCenter_Username" {
@@ -29,11 +25,3 @@ output "vCenter_Password" {
 output "vCenter_Appliance_Root_Password" {
   value = random_string.vcenter_password.result
 }
-
-#output "KSA_Token_Location" {
-#  value = "The user cluster KSA Token (for logging in from GCP) is located at ./ksa_token.txt"
-#}
-
-#output "SSH_Key_Location" {
-#  value = "An SSH Key was created for this environment, it is saved at ~/.ssh/${local.ssh_key_name}"
-#}
