@@ -13,7 +13,9 @@ variable "namespace" {
 variable "storagepolicy" {
   description = "Storage Policy Name configured in vSAN"
 }
-variable "storagelimit" {}
+variable "storagelimit" {
+  description = "Storage Policy limit"
+}
 
 variable "cp_vm_network" {
   description = "VM Network CIDR"
