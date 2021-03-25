@@ -1,4 +1,4 @@
-[![Equinix Metal Website](https://img.shields.io/badge/Website%3A-Metal.Equinix.com-blue)](http://metal.equinix.com) [![Slack Status](https://slack.equinixmetal.com/badge.svg)](https://slack.equinixmetal.com/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) ![](https://img.shields.io/badge/Stability-Experimental-red.svg) [![Build Status](https://cloud.drone.io/api/badges/packet-labs/packet-tanzu-tf/status.svg)](https://cloud.drone.io/packet-labs/packet-tanzu-tf)
+[![Equinix Metal Website](https://img.shields.io/badge/Website%3A-Metal.Equinix.com-blue)](http://metal.equinix.com) [![Slack Status](https://slack.equinixmetal.com/badge.svg)](https://slack.equinixmetal.com/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) ![](https://img.shields.io/badge/Stability-Experimental-red.svg) 
 
 # VMware Tanzu Installation on Equinix Metal with Terraform
 
