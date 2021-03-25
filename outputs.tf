@@ -1,33 +1,34 @@
 output "VPN_Endpoint" {
-  value = packet_device.router.access_public_ipv4
+  value = module.vsphere.vpn_endpoint
 }
 
 output "VPN_PSK" {
-  value = random_string.ipsec_psk.result
+  value = module.vsphere.vpn_psk
 }
 
 output "VPN_User" {
-  value = var.vpn_user
+  value = module.vsphere.vpn_user
 }
 
-output "VPN_Pasword" {
-  value = random_string.vpn_pass.result
+output "VPN_Password" {
+  # TODO the typo is corrected in the next module version (currently unreleased)
+  value = module.vsphere.vpn_password
 }
 
 output "vCenter_FQDN" {
-  value = "vcva.packet.local"
+  value = module.vsphere.vcenter_fqdn
 }
 
 output "vCenter_Username" {
-  value = "Administrator@vsphere.local"
+  value = module.vsphere.vcenter_username
 }
 
 output "vCenter_Password" {
-  value = random_string.sso_password.result
+  value = module.vsphere.vcenter_password
 }
 
 output "vCenter_Appliance_Root_Password" {
-  value = random_string.vcenter_password.result
+  value = module.vsphere.vcenter_root_password
 }
 
 #output "KSA_Token_Location" {

@@ -1,23 +1,3 @@
-variable "gcs_bucket_name" {}
-variable "storage_reader_key_name" {}
-variable "s3_boolean" {}
-variable "s3_url" {}
-variable "s3_access_key" {}
-variable "s3_secret_key" {}
-variable "s3_bucket_name" {}
-variable "nsx_manager_ova_name" {}
-variable "nsx_controller_ova_name" {}
-variable "nsx_edge_ova_name" {}
-variable "nsx_domain_0" {}
-variable "router_host" {}
-variable "ssh_private_key" {}
-variable "vcva_host" {}
-variable "vcva_user" {}
-variable "vcva_password" {}
-variable "ssh_key_name" {
-  default = "id_rsa"
-}
-
 resource "random_string" "nsx_password" {
   length           = 16
   min_upper        = 2
@@ -39,17 +19,15 @@ resource "random_string" "nsx_cli_password" {
 data "template_file" "download_nsx" {
   template = file("${path.module}/templates/download_nsx.sh")
   vars = {
-    gcs_bucket_name         = var.gcs_bucket_name
-    storage_reader_key_name = var.storage_reader_key_name
-    s3_boolean              = var.s3_boolean
-    s3_url                  = var.s3_url
-    s3_access_key           = var.s3_access_key
-    s3_secret_key           = var.s3_secret_key
-    s3_bucket_name          = var.s3_bucket_name
-    nsx_manager_ova_name    = var.nsx_manager_ova_name
-    nsx_controller_ova_name = var.nsx_controller_ova_name
-    nsx_edge_ova_name       = var.nsx_edge_ova_name
-    ssh_private_key         = var.ssh_private_key
+    s3_boolean               = var.s3_boolean
+    s3_url                   = var.s3_url
+    s3_access_key            = var.s3_access_key
+    s3_secret_key            = var.s3_secret_key
+    object_store_bucket_name = var.object_store_bucket_name
+    nsx_manager_ova_name     = var.nsx_manager_ova_name
+    nsx_controller_ova_name  = var.nsx_controller_ova_name
+    nsx_edge_ova_name        = var.nsx_edge_ova_name
+    ssh_private_key          = var.ssh_private_key
   }
 }
 

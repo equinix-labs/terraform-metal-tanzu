@@ -1,13 +1,7 @@
-variable "vsphere_user" {}
-variable "vsphere_password" {}
-variable "vsphere_server" {}
-variable "license_key" {}
-variable "product_description" {}
-
 provider "vsphere" {
-  user           = var.vsphere_user
-  password       = var.vsphere_password
-  vsphere_server = var.vsphere_server
+  user                 = var.vsphere_user
+  password             = var.vsphere_password
+  vsphere_server       = var.vsphere_server
   allow_unverified_ssl = true
 }
 
@@ -15,6 +9,7 @@ resource "vsphere_license" "licenseKey" {
   license_key = var.license_key
 
   labels = {
+    # TODO Equinix Metal
     Provider = "Packet"
     Product  = var.product_description
   }
