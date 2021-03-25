@@ -17,7 +17,7 @@ resource "null_resource" "namespace_config" {
   connection {
     type        = "ssh"
     user        = "root"
-    private_key = file("~/.ssh/${var.ssh_key_name}")
+    private_key = file(module.vsphere.ssh_key_path)
     host        = module.vsphere.bastion_host
   }
 
@@ -32,8 +32,9 @@ resource "null_resource" "apply_namespace_config" {
   connection {
     type        = "ssh"
     user        = "root"
-    private_key = file("~/.ssh/${var.ssh_key_name}")
+    private_key = file(module.vsphere.ssh_key_path)
     host        = module.vsphere.bastion_host
+
   }
 
   provisioner "remote-exec" {
@@ -65,7 +66,7 @@ resource "null_resource" "supervisor_cluster_config" {
   connection {
     type        = "ssh"
     user        = "root"
-    private_key = file("~/.ssh/${var.ssh_key_name}")
+    private_key = file(module.vsphere.ssh_key_path)
     host        = module.vsphere.bastion_host
   }
 
@@ -80,7 +81,7 @@ resource "null_resource" "apply_supervisor_cluster_config" {
   connection {
     type        = "ssh"
     user        = "root"
-    private_key = file("~/.ssh/${var.ssh_key_name}")
+    private_key = file(module.vsphere.ssh_key_path)
     host        = module.vsphere.bastion_host
   }
 

@@ -14,30 +14,22 @@ variable "nsx_domain_0" {
   default = "metal.local"
 }
 
-terraform {
-  required_providers {
-    nsxt = {
-      source  = "vmware/nsxt"
-      version = "3.1.0"
-    }
-  }
-}
-
 module "nsx-dc" {
   source      = "./modules/nsxtdc"
-  router_host = module.vsphere.metal_device.router.access_public_ipv4
+  router_host = module.vsphere.vpn_endpoint
 
-  ssh_private_key         = chomp(module.vsphere.tls_private_key.ssh_key_pair.private_key_pem)
+  ssh_private_key         = chomp(file(module.vsphere.ssh_key_path))
   nsx_manager_ova_name    = var.nsx_manager_ova_name
   nsx_controller_ova_name = var.nsx_controller_ova_name
   nsx_edge_ova_name       = var.nsx_edge_ova_name
   nsx_domain_0            = var.nsx_domain_0
 
-  nsx_license = var.nsx_license
+  # TODO nsx_license variable needed in nsxtdc module?
+  # nsx_license = var.nsx_license
 
-  vcva_host     = "vcva.metal.local"
-  vcva_user     = "Administrator@vsphere.local"
-  vcva_password = random_string.sso_password.result
+  vcva_host     = module.vsphere.vcenter_fqdn
+  vcva_user     = module.vsphere.vcenter_username
+  vcva_password = module.vsphere.vcenter_password
   # Using S3-compatible Object Storage
   s3_boolean     = var.s3_boolean
   s3_url         = var.s3_url
@@ -58,7 +50,9 @@ output "nsx-datacenter-cli-password" {
 }
 
 provider "nsxt" {
-  host                  = "" #This value will be in vSphere after the above module deploys.
+  # TODO This value will be in vSphere after the above module deploys.
+  # TODO set it to the dynamic value
+  host                  = ""
   username              = "admin"
   password              = module.nsx-dc.nsx_password
   allow_unverified_ssl  = true
