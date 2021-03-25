@@ -30,17 +30,17 @@ cd /root/
 if [ $s3_boolean = "false" ]; then
   echo "USING GCS"
   gcloud auth activate-service-account --key-file=$HOME/anthos/gcp_keys/${storage_reader_key_name}
-  gsutil cp gs://${gcs_bucket_name}/${nsx_manager_ova_name} .
-  gsutil cp gs://${gcs_bucket_name}/${nsx_controller_ova_name} .
-  gsutil cp gs://${gcs_bucket_name}/${nsx_edge_ova_name} .
+  gsutil cp gs://${object_store_bucket_name}/${nsx_manager_ova_name} .
+  gsutil cp gs://${object_store_bucket_name}/${nsx_controller_ova_name} .
+  gsutil cp gs://${object_store_bucket_name}/${nsx_edge_ova_name} .
 else
   echo "USING S3"
   curl -LO https://dl.min.io/client/mc/release/linux-amd64/mc
   chmod +x mc
   mv mc /usr/local/bin/
   mc config host add s3 ${s3_url} ${s3_access_key} ${s3_secret_key}
-  mc cp s3/${s3_bucket_name}/${nsx_manager_ova_name} .
-  mc cp s3/${s3_bucket_name}/${nsx_controller_ova_name} .
-  mc cp s3/${s3_bucket_name}/${nsx_edge_ova_name} .
+  mc cp s3/${object_store_bucket_name}/${nsx_manager_ova_name} .
+  mc cp s3/${object_store_bucket_name}/${nsx_controller_ova_name} .
+  mc cp s3/${object_store_bucket_name}/${nsx_edge_ova_name} .
 fi
 
