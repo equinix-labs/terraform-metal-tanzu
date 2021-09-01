@@ -1,8 +1,18 @@
+variable "metro" {
+  type        = string
+  default     = "dc"
+  description = "Equinix Metal Metro"
+}
+
+/*
+# TODO: NOT USED, discard?
 variable "nsdomain" {
   type        = string
   default     = "metal.local"
   description = "NSX Domain"
 }
+*/
+
 variable "cluster_name" {
   type        = string
   default     = "metal-supervisor-tf"
@@ -83,6 +93,11 @@ variable "metal_organization_id" {
   description = "Equinix Metal Organization ID"
 }
 
+/*
+# Can not create projects because minio project doesn't support it
+# and currently the same metal_project is being used for vsphere and minio.
+# TODO: separate projects? implement project creation in minio or root module
+# and pass project_id to the dependent module(s).
 variable "metal_create_project" {
   type        = bool
   default     = true
@@ -94,6 +109,7 @@ variable "metal_project_name" {
   default     = "baremetal-anthos"
   description = "The name of the Metal project if 'create_project' is 'true'."
 }
+*/
 
 variable "s3_url" {
   description = "This is the URL endpoint to connect your s3 client to"
@@ -180,5 +196,24 @@ variable "nsx_domain_0" {
   default     = "metal.local"
   description = "NSX Network Domain"
 }
+variable "esxi_size" {
+  type        = string
+  default     = "c3.small.x86"
+  description = "Equinix Metal control plane node plan"
+}
+variable "router_size" {
+  type        = string
+  default     = "c3.small.x86"
+  description = "Equinix Metal router node plan"
+}
+variable "esxi_host_count" {
+  type        = number
+  default     = 1
+  description = "ESXi Host Count"
+}
 
-
+variable "vmware_os" {
+  description = "This is the version of vSphere that you want to deploy (ESXi 6.5, 6.7, & 7.0 have been tested)"
+  type        = string
+  default     = "vmware_esxi_7_0"
+}
