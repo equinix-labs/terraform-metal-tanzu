@@ -1,4 +1,5 @@
 module "vsphere_license" {
+  depends_on          = [module.vsphere]
   source              = "./modules/vsphere-license"
   vsphere_server      = module.vsphere.vcenter_fqdn
   vsphere_user        = module.vsphere.vcenter_username
@@ -8,6 +9,7 @@ module "vsphere_license" {
 }
 
 module "vsphere_enterprise_license" {
+  depends_on          = [module.vsphere]
   source              = "./modules/vsphere-license"
   vsphere_server      = module.vsphere.vcenter_fqdn
   vsphere_user        = module.vsphere.vcenter_username
@@ -17,6 +19,7 @@ module "vsphere_enterprise_license" {
 }
 
 module "vsphere_addon_license" {
+  depends_on          = [module.vsphere]
   source              = "./modules/vsphere-license"
   vsphere_server      = module.vsphere.vcenter_fqdn
   vsphere_user        = module.vsphere.vcenter_username

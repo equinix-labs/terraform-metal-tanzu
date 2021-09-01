@@ -1,9 +1,13 @@
 terraform {
-  required_version = ">= 0.13"
+  required_version = ">= 0.14"
   required_providers {
     metal = {
       source  = "equinix/metal"
-      version = "1.0.0"
+      version = "2.0.1"
+    }
+    ssh = {
+      source  = "AndrewChubatiuk/ssh"
+      version = "0.1.1"
     }
     local = {
       source = "hashicorp/local"
@@ -19,6 +23,9 @@ terraform {
     }
     tls = {
       source = "hashicorp/tls"
+    }
+    vsphere = {
+      source = "hashicorp/vsphere"
     }
     nsxt = {
       source  = "vmware/nsxt"
