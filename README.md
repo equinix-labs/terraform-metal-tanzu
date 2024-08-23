@@ -1,6 +1,6 @@
-[![Equinix Metal Website](https://img.shields.io/badge/Website%3A-Metal.Equinix.com-blue)](http://metal.equinix.com) [![Slack Status](https://slack.equinixmetal.com/badge.svg)](https://slack.equinixmetal.com/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) ![](https://img.shields.io/badge/Stability-Experimental-red.svg) 
+# VMware Tanzu Installation on Equinix Metal with Terraform (Deprecated)
 
-# VMware Tanzu Installation on Equinix Metal with Terraform
+**NOTE**: This module is deprecated.  The module it relies on, https://github.com/equinix/terraform-metal-vsphere, has been deprecated because it is no longer functional; since this module relied on that one, it is also no longer functional in its current state.  The original code and description are provided as a point of reference.
 
 These files will allow you to use [Terraform](http://terraform.io) to deploy [VMware Tanzu](https://tanzu.io) on [Equinix Metal's Bare Metal Cloud offering](https://metal.equinix.com/product/). 
 
